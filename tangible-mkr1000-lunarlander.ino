@@ -3,63 +3,51 @@
 #define DEBUG 0
 #define GET_VAR_NAME(var) #var
 
-const int leftPin = 5;
-const int rightPin = 3;
-const int upPin = 4;
-
-const int flexPin = A6;
+const int thrustPin = 4;
+const int startPin = 6;
+const int resetPin = 1;
 
 void setup() {
   Serial.begin(9600);
 
   Keyboard.begin();
 
-  pinMode(leftPin, INPUT_PULLUP);
-  pinMode(rightPin, INPUT_PULLUP);
-  pinMode(upPin, INPUT_PULLUP);
-  pinMode(flexPin, INPUT);
+  pinMode(startPin, INPUT_PULLUP);
+  pinMode(resetPin, INPUT_PULLUP);
+  pinMode(thrustPin, INPUT_PULLUP);
 }
 
 void loop() {
   // 1. Read current state
-  int leftReading = digitalRead(leftPin);
-  int rightReading = digitalRead(rightPin);
-  int upReading = digitalRead(upPin);
-  int flexReading = analogRead(flexPin);
+  int startReading = digitalRead(startPin);
+  int resetReading = digitalRead(resetPin);
+  int thrustReading = digitalRead(thrustPin);
 
   // 2. Map sensor readings to keyboard inputs
-  if (leftReading == LOW) {
-    Keyboard.press(KEY_LEFT_ARROW);
+  if (startReading == LOW) {
+    // TBD ON
   } else {
-    Keyboard.release(KEY_LEFT_ARROW);
+    // TBD OFF
   }
 
-  if (rightReading == LOW) {
-    Keyboard.press(KEY_RIGHT_ARROW);
+  if (resetReading == LOW) {
+    // TBD RESET F5?
   } else {
-    Keyboard.release(KEY_RIGHT_ARROW);
+    // TBD RESET F5?
   }
 
-  if (upReading == LOW) {
+  if (thrustReading == LOW) {
     Keyboard.press(KEY_UP_ARROW);
   } else {
     Keyboard.release(KEY_UP_ARROW);
   }
 
-//  if (buttonReading == LOW) {
-//    Keyboard.press(KEY_RETURN);
-//  } else {
-//    Keyboard.relase(KEY_RETURN);
-//  }
-
   #ifdef DEBUG
-    Serial.println("FLEX \t LEFT \t UP \t RIGHT");
-    Serial.print(flexReading);
+    Serial.println("THRUST \t RESET \t START");
+    Serial.print(thrustReading);
     Serial.print(" \t ");
-    Serial.print(leftReading);
+    Serial.print(resetReading);
     Serial.print(" \t ");
-    Serial.print(upReading);
-    Serial.print(" \t ");
-    Serial.println(rightReading);
+    Serial.println(startReading);
   #endif
 }
