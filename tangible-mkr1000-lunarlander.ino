@@ -1,4 +1,5 @@
 #include "Keyboard.h";
+#include "Mouse.h";
 
 #define ENCODER_DO_NOT_USE_INTERRUPTS
 #include <Encoder.h>;
@@ -6,6 +7,7 @@
 const int thrustPin = 4;
 const int startPin = 6;
 const int resetPin = 1;
+int oldResetState = HIGH;
 
 Encoder wheel(5, 3);
 long oldPosition = -999;
@@ -31,6 +33,27 @@ void loop() {
   int thrustReading = digitalRead(thrustPin);
   long wheelPosition = wheel.read();
 
+  // 2. Map sensor readings to keyboard inputs
+  if (startReading == LOW) {
+    // TBD ON
+  } else {
+    // TBD OFF
+  }
+
+  // Reset, but only when transitoning from HIGH -> LOW
+  if (oldResetState == HIGH && resetReading == LOW) {
+    Mouse.click(MOUSE_LEFT);
+  }
+  oldResetState = resetReading;
+
+  // Thrust button
+  if (thrustReading == LOW) {
+    Keyboard.press(KEY_UP_ARROW);
+  } else {
+    Keyboard.release(KEY_UP_ARROW);
+  }
+
+  // Determine LEFT or RIGHT for rotary encoder
   if (wheelPosition != oldPosition) {
     if (wheelPosition > oldPosition) {
       Keyboard.press(KEY_RIGHT_ARROW);
@@ -41,6 +64,7 @@ void loop() {
     oldPosition = wheelPosition;
   }
 
+  // NOTE: Wait a little before we release from the rotary encoder!
   if (wheelPosition == oldPosition) {
     unsigned long newRotation = millis();
 
@@ -49,25 +73,6 @@ void loop() {
       Keyboard.release(KEY_RIGHT_ARROW);
       lastRotation = newRotation;
     }
-  }
-
-  // 2. Map sensor readings to keyboard inputs
-  if (startReading == LOW) {
-    // TBD ON
-  } else {
-    // TBD OFF
-  }
-
-  if (resetReading == LOW) {
-    // TBD RESET F5?
-  } else {
-    // TBD RESET F5?
-  }
-
-  if (thrustReading == LOW) {
-    Keyboard.press(KEY_UP_ARROW);
-  } else {
-    Keyboard.release(KEY_UP_ARROW);
   }
 
   #ifdef DEBUG
