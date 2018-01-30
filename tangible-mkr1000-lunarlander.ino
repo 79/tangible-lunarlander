@@ -6,8 +6,8 @@
 const int leftPin = 5;
 const int rightPin = 3;
 const int upPin = 4;
-//const int downPin = 4;
-//const int buttonPin = 5;
+
+const int flexPin = A6;
 
 void setup() {
   Serial.begin(9600);
@@ -17,8 +17,7 @@ void setup() {
   pinMode(leftPin, INPUT_PULLUP);
   pinMode(rightPin, INPUT_PULLUP);
   pinMode(upPin, INPUT_PULLUP);
-//  pinMode(downPin, INPUT_PULLUP);
-//  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(flexPin, INPUT);
 }
 
 void loop() {
@@ -26,8 +25,7 @@ void loop() {
   int leftReading = digitalRead(leftPin);
   int rightReading = digitalRead(rightPin);
   int upReading = digitalRead(upPin);
-//  int downReading = digitalRead(downPin);
-//  int buttonReading = digitalRead(buttonPin);
+  int flexReading = analogRead(flexPin);
 
   // 2. Map sensor readings to keyboard inputs
   if (leftReading == LOW) {
@@ -48,12 +46,6 @@ void loop() {
     Keyboard.release(KEY_UP_ARROW);
   }
 
-//  if (downReading == LOW) {
-//    Keyboard.press(KEY_DOWN_ARROW);
-//  } else {
-//    Keyboard.relase(KEY_DOWN_ARROW);
-//  }
-//
 //  if (buttonReading == LOW) {
 //    Keyboard.press(KEY_RETURN);
 //  } else {
@@ -61,7 +53,9 @@ void loop() {
 //  }
 
   #ifdef DEBUG
-    Serial.println("LEFT \t UP \t RIGHT");
+    Serial.println("FLEX \t LEFT \t UP \t RIGHT");
+    Serial.print(flexReading);
+    Serial.print(" \t ");
     Serial.print(leftReading);
     Serial.print(" \t ");
     Serial.print(upReading);
