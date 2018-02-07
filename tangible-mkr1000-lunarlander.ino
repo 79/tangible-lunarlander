@@ -4,6 +4,8 @@
 #define ENCODER_DO_NOT_USE_INTERRUPTS
 #include <Encoder.h>;
 
+#define DEBUG 1
+
 const int thrustPin = 4;
 const int startPin = 6;
 const int resetPin = 1;
