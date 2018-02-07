@@ -11,6 +11,8 @@ const int startPin = 6;
 const int resetPin = 1;
 int oldResetState = HIGH;
 
+bool started = false;
+
 Encoder wheel(5, 3);
 long oldPosition = -999;
 unsigned long lastRotation;
@@ -29,17 +31,35 @@ void setup() {
 }
 
 void loop() {
-  // 1. Read current state
+  /**
+    1. Read current state
+  */
   int startReading = digitalRead(startPin);
   int resetReading = digitalRead(resetPin);
   int thrustReading = digitalRead(thrustPin);
   long wheelPosition = wheel.read();
 
-  // 2. Map sensor readings to keyboard inputs
-  if (startReading == LOW) {
-    // TBD ON
-  } else {
-    // TBD OFF
+  /**
+    2. Map sensor readings to keyboard inputs
+  */
+  // Start! (Only once)
+  if (!started && startReading == LOW) {
+    started = true;
+
+    // Alfred
+    Keyboard.press(KEY_LEFT_GUI);
+    Keyboard.press(' ');
+    Keyboard.releaseAll();
+
+    Keyboard.write("l");
+    Keyboard.write("u");
+    Keyboard.write("n");
+    Keyboard.write("a");
+    Keyboard.write("r");
+
+    Keyboard.write(KEY_RETURN);
+
+    delay(3000);
   }
 
   // Reset, but only when transitoning from HIGH -> LOW
@@ -71,8 +91,7 @@ void loop() {
     unsigned long newRotation = millis();
 
     if (newRotation - lastRotation > 30) {
-      Keyboard.release(KEY_LEFT_ARROW);
-      Keyboard.release(KEY_RIGHT_ARROW);
+      Keyboard.releaseAll();
       lastRotation = newRotation;
     }
   }
